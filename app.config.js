@@ -1,4 +1,4 @@
-{
+export default {
   "expo": {
     "name": "goaly-app",
     "slug": "goaly-app",
@@ -13,13 +13,17 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.goaly.goalyapp",
+      "googleServicesFile": process.env.GOOGLE_SERVICES_INFOPLIST,
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.goaly.goalyapp",
+      "googleServicesFile": process.env.GOOGLE_SERVICES_JSON,
     },
     "web": {
       "bundler": "metro",
@@ -27,10 +31,21 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      "@react-native-google-signin/google-signin"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "94796673-4adc-425b-8f86-1b64dc46d00e"
+      }
     }
   }
 }
