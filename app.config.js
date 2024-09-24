@@ -15,7 +15,7 @@ export default {
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.goaly.goalyapp",
-      "googleServicesFile": process.env.GOOGLE_SERVICES_INFOPLIST,
+      "googleServicesFile": process.env.GOOGLESERVICE_INFO_PLIST ?? "./GoogleService-Info.plist",
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +23,7 @@ export default {
         "backgroundColor": "#ffffff"
       },
       "package": "com.goaly.goalyapp",
-      "googleServicesFile": process.env.GOOGLE_SERVICES_JSON,
+      "googleServicesFile": process.env.GOOGLE_SERVICES_JSON ?? "./google-services.json",
     },
     "web": {
       "bundler": "metro",
@@ -32,9 +32,18 @@ export default {
     },
     "plugins": [
       "expo-router",
+      "expo-font",
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
-      "@react-native-google-signin/google-signin"
+      "@react-native-google-signin/google-signin",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ],
     ],
     "experiments": {
       "typedRoutes": true
