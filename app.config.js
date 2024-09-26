@@ -52,6 +52,12 @@ export default {
       "router": {
         "origin": false
       },
+      "updates": {
+        "url": "https://u.expo.dev/94796673-4adc-425b-8f86-1b64dc46d00e"
+      },
+      "runtimeVersion": {
+        "policy": "appVersion"
+      },
       "eas": {
         "projectId": "94796673-4adc-425b-8f86-1b64dc46d00e"
       }
