@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Keyboard, TouchableWithoutFeedback, View } from 'react-native';
 import { Link } from 'expo-router';
 import auth from '@react-native-firebase/auth'
 import {FirebaseError} from '@firebase/app'
@@ -8,6 +8,8 @@ import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import ThemedTextInput from '@/components/ThemedTextInput';
 import StyledButton from '@/components/StyledButton';
+import GoogleSignInButton from '@/components/GoogleSignInButton';
+import ThemeIcon from '@/components/ThemeIcon';
 
 const login = () => {
 
@@ -35,7 +37,7 @@ const login = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ThemedView style={[styles.container, { backgroundColor }]}>
-        <ThemedText style={[styles.title, { color: textColor }]}>Welcome Back</ThemedText>
+        <ThemedText style={[styles.title, { color: textColor }]}>Bienvenido</ThemedText>
         <ThemedTextInput
           placeholder="Email"
           autoCapitalize="none"
@@ -43,16 +45,23 @@ const login = () => {
           onChangeText={setEmail}
         />
         <ThemedTextInput
-          placeholder="Password"
+          placeholder="Contraseña"
           secureTextEntry
           value={password}
           onChangeText={setPassword}
         />
-        <StyledButton onPress={signIn} title="Sign In" />
+        <StyledButton onPress={signIn} title="Iniciar Sesión" />
+        <ThemedView style={{
+          borderWidth: 0.5,
+          borderColor: '#a3a3a3',
+          marginVertical: 30,
+          marginHorizontal: 40
+          }} />
+        <GoogleSignInButton />
         <ThemedText style={[styles.footerText, { color: textColor }]}>
-          Don't have an account yet?{' '}
+          ¿No tienes cuenta todavía?{' '}
           <Link href="/register" style={styles.link}>
-            Sign Up
+            ¡Crea una!
           </Link>
         </ThemedText>
       </ThemedView>

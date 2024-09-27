@@ -5,7 +5,7 @@ import { ThemedText } from './ThemedText';
  interface Props {
   onPress?: () => void,
   title: string,
-  bgcolor?: string
+  bgcolor?: string,
  }
 
 

@@ -8,6 +8,7 @@ import StyledButton from '@/components/StyledButton';
 import ThemedTextInput from '@/components/ThemedTextInput';
 import { Link } from 'expo-router';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import GoogleSignInButton from '@/components/GoogleSignInButton';
 
 const register = () => {
   const backgroundColor = useThemeColor({}, 'background');
@@ -31,7 +32,7 @@ const register = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ThemedView style={[styles.container, { backgroundColor }]}>
-        <ThemedText style={[styles.title, { color: textColor }]}>Create your account</ThemedText>
+        <ThemedText style={[styles.title, { color: textColor }]}>Crea tu cuenta</ThemedText>
         <ThemedTextInput
           placeholder="Email"
           keyboardType="email-address"
@@ -40,16 +41,23 @@ const register = () => {
           value={email}
         />
         <ThemedTextInput
-          placeholder="Password"
+          placeholder="Contraseña"
           secureTextEntry
           onChangeText={setPassword}
           value={password}
         />
-        <StyledButton onPress={singUp} title="Sign Up" bgcolor='#0a7ea4' />
+        <StyledButton onPress={singUp} title="Crear cuenta" bgcolor='#0a7ea4' />
+        <ThemedView style={{
+          borderWidth: 0.5,
+          borderColor: '#a3a3a3',
+          marginVertical: 30,
+          marginHorizontal: 40
+          }} />
+        <GoogleSignInButton />
         <ThemedText style={[styles.footerText, { color: textColor }]}>
-          Already have an account?{' '}
+        ¿Ya tienes una cuenta?{' '}
           <Link href="/login" style={styles.link}>
-            Sign In
+          Inicia sesión
           </Link>
         </ThemedText>
       </ThemedView>
