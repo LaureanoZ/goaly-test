@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Keyboard, TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet, Keyboard, TouchableWithoutFeedback, Alert, Image } from 'react-native';
 import { Link } from 'expo-router';
 import auth from '@react-native-firebase/auth'
 import {FirebaseError} from '@firebase/app'
@@ -9,7 +9,6 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import ThemedTextInput from '@/components/ThemedTextInput';
 import StyledButton from '@/components/StyledButton';
 import GoogleSignInButton from '@/components/GoogleSignInButton';
-import ThemeIcon from '@/components/ThemeIcon';
 
 const login = () => {
 
@@ -25,10 +24,27 @@ const login = () => {
     setIsLoading(true);
 
     try {
-      await auth().signInWithEmailAndPassword(email, password);
+      if (!email && !password) {
+        Alert.alert('Campos obligatorios', 'Por favor, ingresa tu correo electrónico y contraseña para continuar.');
+      } else if (!email) {
+        Alert.alert('Campo obligatorio', 'Por favor, ingresa tu correo electrónico para continuar.');
+      } else if (!password) {
+        Alert.alert('Campo obligatorio', 'Por favor, ingresa tu contraseña para continuar.');
+      } else {
+        await auth().signInWithEmailAndPassword(email, password);
+      }
     } catch (e: any) {
       const err = e as FirebaseError;
-      alert('Registration failed ' + err.message )
+      
+      if (err.code === 'auth/wrong-password') {
+        Alert.alert('Error de autenticación', 'La contraseña es incorrecta. Por favor, intenta de nuevo.');
+      } else if (err.code === 'auth/user-not-found') {
+        Alert.alert('Error de autenticación', 'No se encontró una cuenta con ese correo electrónico. Verifica tu correo o regístrate.');
+      } else if (err.code === 'auth/invalid-email') {
+        Alert.alert('Correo electrónico inválido', 'El formato del correo electrónico no es correcto. Verifica e intenta nuevamente.');
+      } else {
+        Alert.alert('Error de autenticación', 'Ocurrió un problema al iniciar sesión. Por favor, intenta más tarde.');
+      }
     }
     setIsLoading(false);
 
@@ -37,9 +53,13 @@ const login = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ThemedView style={[styles.container, { backgroundColor }]}>
-        <ThemedText style={[styles.title, { color: textColor }]}>Bienvenido</ThemedText>
+      <Image 
+        source={require('../assets/images/goaly-stroke.png')} 
+        style={{width:200, height: 70, alignSelf:'center', marginBottom: 30}}
+      />
         <ThemedTextInput
           placeholder="Email"
+          keyboardType='email-address'
           autoCapitalize="none"
           value={email}
           onChangeText={setEmail}
@@ -50,7 +70,7 @@ const login = () => {
           value={password}
           onChangeText={setPassword}
         />
-        <StyledButton onPress={signIn} title="Iniciar Sesión" />
+        <StyledButton bgcolor='#008d00' onPress={signIn} title="Iniciar Sesión" />
         <ThemedView style={{
           borderWidth: 0.5,
           borderColor: '#a3a3a3',

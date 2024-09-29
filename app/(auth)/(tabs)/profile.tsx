@@ -2,8 +2,11 @@ import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import StyledButton from '@/components/StyledButton'
 import auth from '@react-native-firebase/auth';
+import { useUser } from '@/context/userContext';
 
-const home = () => {
+
+
+const profile = () => {
   return (
     <View style={styles.container}>
       <StyledButton bgcolor='red' title='Cerrar Session' onPress={()=>{auth().signOut()}}></StyledButton>
@@ -11,7 +14,7 @@ const home = () => {
   )
 }
 
-export default home;
+export default profile;
 
 const styles = StyleSheet.create({
   container: {

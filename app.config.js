@@ -13,6 +13,9 @@ export default {
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "splash": {
+        "image": "./assets/images/splash.png",
+      },
       "supportsTablet": true,
       "bundleIdentifier": "com.goaly.goalyapp",
       "googleServicesFile": process.env.GOOGLESERVICE_INFO_PLIST ?? "./GoogleService-Info.plist",
@@ -20,6 +23,11 @@ export default {
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff",
+      },
+      "splash": {
+        "image": "./assets/images/splash.png",
+        "resizeMode": "contain",
         "backgroundColor": "#ffffff"
       },
       "package": "com.goaly.goalyapp",

@@ -6,8 +6,9 @@ import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import auth, { FirebaseAuthTypes} from '@react-native-firebase/auth';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { ActivityIndicator, View } from 'react-native';
+import { UserProvider } from '@/context/userContext';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -29,18 +30,18 @@ export default function RootLayout() {
 
 
   };
-  useEffect(()=>{
+  useEffect(() => {
     if (initializing) return;
 
     const inAuthGroup = segments[0] === '(auth)'
 
     if (user && !inAuthGroup) {
       router.replace('/(auth)/home')
-    }else if (!user && inAuthGroup) {
+    } else if (!user && inAuthGroup) {
       router.replace('/');
     }
 
-  },[user, initializing]);
+  }, [user, initializing]);
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     if (initializing) {
@@ -48,18 +49,18 @@ export default function RootLayout() {
     }
     return subscriber;
   }, []);
-  
-  
+
+
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
-  
+
   if (!loaded) {
     return null;
   }
-  
+
 
 
   if (initializing) {
@@ -71,13 +72,15 @@ export default function RootLayout() {
     );
   }
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="login" options={{ headerShown: false }} />
-        <Stack.Screen name="register" options={{ headerShown: false }} />
-        <Stack.Screen name='(auth)' options={{headerShown:false}} />
-      </Stack>
-    </ThemeProvider>
+
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="login" options={{ headerShown: false }} />
+          <Stack.Screen name="register" options={{ headerShown: false }} />
+          <Stack.Screen name='(auth)' options={{ headerShown: false }} />
+        </Stack>
+      </ThemeProvider>
+
   );
 }
