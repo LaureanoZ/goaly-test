@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, Keyboard, TouchableWithoutFeedback, Alert, Image } from 'react-native';
 import { Link } from 'expo-router';
-import auth from '@react-native-firebase/auth'
-import {FirebaseError} from '@firebase/app'
+import auth from '@react-native-firebase/auth';
+import { FirebaseError } from '@firebase/app';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -10,8 +10,7 @@ import ThemedTextInput from '@/components/ThemedTextInput';
 import StyledButton from '@/components/StyledButton';
 import GoogleSignInButton from '@/components/GoogleSignInButton';
 
-const login = () => {
-
+const Login = () => {
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
 
@@ -20,7 +19,6 @@ const login = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const signIn = async () => {
-
     setIsLoading(true);
 
     try {
@@ -31,11 +29,24 @@ const login = () => {
       } else if (!password) {
         Alert.alert('Campo obligatorio', 'Por favor, ingresa tu contraseña para continuar.');
       } else {
-        await auth().signInWithEmailAndPassword(email, password);
+        // Iniciar sesión con email y contraseña
+        const { user } = await auth().signInWithEmailAndPassword(email, password);
+
+        // Verificar si el email ha sido verificado
+        if (user.emailVerified) {
+          Alert.alert('Inicio de sesión exitoso', 'Has iniciado sesión correctamente.');
+          // Aquí puedes redirigir al usuario a la pantalla principal
+        } else {
+          Alert.alert(
+            'Correo no verificado',
+            'Debes verificar tu correo electrónico antes de poder iniciar sesión. Revisa tu bandeja de entrada y haz clic en el enlace de verificación.'
+          );
+          await auth().signOut(); // Cerrar sesión hasta que el usuario verifique el correo
+        }
       }
     } catch (e: any) {
       const err = e as FirebaseError;
-      
+
       if (err.code === 'auth/wrong-password') {
         Alert.alert('Error de autenticación', 'La contraseña es incorrecta. Por favor, intenta de nuevo.');
       } else if (err.code === 'auth/user-not-found') {
@@ -47,19 +58,19 @@ const login = () => {
       }
     }
     setIsLoading(false);
-
-  }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ThemedView style={[styles.container, { backgroundColor }]}>
-      <Image 
-        source={require('../assets/images/goaly-stroke.png')} 
-        style={{width:200, height: 70, alignSelf:'center', marginBottom: 30}}
-      />
+        <Image
+          source={require('../assets/images/goaly-stroke.png')}
+          style={{ width: 200, height: 70, alignSelf: 'center', marginBottom: 30 }}
+          accessibilityLabel= 'Goaly logo'
+        />
         <ThemedTextInput
           placeholder="Email"
-          keyboardType='email-address'
+          keyboardType="email-address"
           autoCapitalize="none"
           value={email}
           onChangeText={setEmail}
@@ -70,13 +81,15 @@ const login = () => {
           value={password}
           onChangeText={setPassword}
         />
-        <StyledButton bgcolor='#008d00' onPress={signIn} title="Iniciar Sesión" />
-        <ThemedView style={{
-          borderWidth: 0.5,
-          borderColor: '#a3a3a3',
-          marginVertical: 30,
-          marginHorizontal: 40
-          }} />
+        <StyledButton bgcolor="#008d00" onPress={signIn} title="Iniciar Sesión" isLoading={isLoading} />
+        <ThemedView
+          style={{
+            borderWidth: 0.5,
+            borderColor: '#a3a3a3',
+            marginVertical: 30,
+            marginHorizontal: 40,
+          }}
+        />
         <GoogleSignInButton />
         <ThemedText style={[styles.footerText, { color: textColor }]}>
           ¿No tienes cuenta todavía?{' '}
@@ -95,11 +108,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 16,
   },
-  title: {
-    fontSize: 24,
-    textAlign: 'center',
-    marginBottom: 24,
-  },
   footerText: {
     marginTop: 16,
     textAlign: 'center',
@@ -110,4 +118,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default login;
+export default Login;

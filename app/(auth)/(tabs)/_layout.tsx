@@ -1,15 +1,17 @@
 import ThemeIcon from '@/components/ThemeIcon';
-import {Colors} from '@/constants/Colors'
+import { Colors } from '@/constants/Colors'
 import { Tabs } from 'expo-router';
+import CreateGoalButton from '@/components/CreateGoalButton';
+import HeaderLogo from '@/components/HeaderLogo';
 
 export default function TabLayout() {
   const iconColor = Colors.gColors.primary;
   return (
-    <Tabs screenOptions={{ 
-      tabBarActiveTintColor: iconColor, 
+    <Tabs screenOptions={{
+      tabBarActiveTintColor: iconColor,
       tabBarInactiveTintColor: 'gray',
       tabBarShowLabel: false
-      }}>
+    }}>
       <Tabs.Screen
         name="groups"
         options={{
@@ -20,7 +22,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Inicio',
+          headerTitle: props => <HeaderLogo />,
           tabBarIcon: ({ color }) => <ThemeIcon iconColor={color} iconName='home' iconSize={28} />,
         }}
       />
@@ -32,7 +34,7 @@ export default function TabLayout() {
 
         }}
       />
-    </Tabs>
+    </Tabs >
 
   );
 }

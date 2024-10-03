@@ -1,10 +1,16 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
-import StyledButton from '@/components/StyledButton'
-import auth from '@react-native-firebase/auth';
+import { View, Text, StyleSheet, Button } from 'react-native'
 import { ThemedText } from '@/components/ThemedText';
+import { Link, useNavigation } from 'expo-router';
+import { useEffect } from 'react';
+import CreateGoalButton from '@/components/CreateGoalButton';
 
 const home = () => {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const openModal = () => {(navigation as any).navigate('createGoalModal')}
+    navigation.setOptions({ headerRight: () => <CreateGoalButton onPress={openModal} />, });
+  }, [navigation]);
   return (
     <View style={styles.container}>
       <ThemedText>Home</ThemedText>

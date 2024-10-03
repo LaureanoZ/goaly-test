@@ -28,9 +28,9 @@ const GoogleSignInButton = () => {
   return (
     <Pressable style={styles.button} onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}>
       <View style={styles.container}>
-        <Text>
-          <ThemeIcon iconName='logo-google' iconColor='#DB4437' iconSize={30} />
-        </Text>
+        <View>
+          <ThemeIcon iconName='logo-google' iconColor='#DB4437' iconSize={25} />
+        </View>
         <ThemedText style={styles.text}>Continuar con Google</ThemedText>
       </View>
     </Pressable>
