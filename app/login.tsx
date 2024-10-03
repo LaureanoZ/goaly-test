@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, Keyboard, TouchableWithoutFeedback, Alert, Image } from 'react-native';
+import { StyleSheet, Keyboard, TouchableWithoutFeedback, Image } from 'react-native';
 import { Link } from 'expo-router';
-import auth from '@react-native-firebase/auth';
-import { FirebaseError } from '@firebase/app';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import ThemedTextInput from '@/components/ThemedTextInput';
 import StyledButton from '@/components/StyledButton';
 import GoogleSignInButton from '@/components/GoogleSignInButton';
+import { useSignIn } from '@/services/auth/useSignIn';
 
 const Login = () => {
   const backgroundColor = useThemeColor({}, 'background');
@@ -16,49 +15,11 @@ const Login = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const { signIn, isLoading } = useSignIn();
 
-  const signIn = async () => {
-    setIsLoading(true);
-
-    try {
-      if (!email && !password) {
-        Alert.alert('Campos obligatorios', 'Por favor, ingresa tu correo electrónico y contraseña para continuar.');
-      } else if (!email) {
-        Alert.alert('Campo obligatorio', 'Por favor, ingresa tu correo electrónico para continuar.');
-      } else if (!password) {
-        Alert.alert('Campo obligatorio', 'Por favor, ingresa tu contraseña para continuar.');
-      } else {
-        // Iniciar sesión con email y contraseña
-        const { user } = await auth().signInWithEmailAndPassword(email, password);
-
-        // Verificar si el email ha sido verificado
-        if (user.emailVerified) {
-          Alert.alert('Inicio de sesión exitoso', 'Has iniciado sesión correctamente.');
-          // Aquí puedes redirigir al usuario a la pantalla principal
-        } else {
-          Alert.alert(
-            'Correo no verificado',
-            'Debes verificar tu correo electrónico antes de poder iniciar sesión. Revisa tu bandeja de entrada y haz clic en el enlace de verificación.'
-          );
-          await auth().signOut(); // Cerrar sesión hasta que el usuario verifique el correo
-        }
-      }
-    } catch (e: any) {
-      const err = e as FirebaseError;
-
-      if (err.code === 'auth/wrong-password') {
-        Alert.alert('Error de autenticación', 'La contraseña es incorrecta. Por favor, intenta de nuevo.');
-      } else if (err.code === 'auth/user-not-found') {
-        Alert.alert('Error de autenticación', 'No se encontró una cuenta con ese correo electrónico. Verifica tu correo o regístrate.');
-      } else if (err.code === 'auth/invalid-email') {
-        Alert.alert('Correo electrónico inválido', 'El formato del correo electrónico no es correcto. Verifica e intenta nuevamente.');
-      } else {
-        Alert.alert('Error de autenticación', 'Ocurrió un problema al iniciar sesión. Por favor, intenta más tarde.');
-      }
-    }
-    setIsLoading(false);
-  };
+  const handleLogin = () => {
+    signIn({email, password});
+  }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -81,7 +42,7 @@ const Login = () => {
           value={password}
           onChangeText={setPassword}
         />
-        <StyledButton bgcolor="#008d00" onPress={signIn} title="Iniciar Sesión" isLoading={isLoading} />
+        <StyledButton bgcolor="#008d00" onPress={handleLogin} title="Iniciar Sesión" isLoading={isLoading} />
         <ThemedView
           style={{
             borderWidth: 0.5,
