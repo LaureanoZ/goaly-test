@@ -23,7 +23,7 @@ const home = () => {
           <ThemeIcon iconName='laptop-outline' iconColor='black' iconSize={30} />
         </View>
         <View style={{marginStart: 10}}>
-          <Text style={{fontSize: 17}}>Estudiar programación</Text>
+          <Text style={{fontSize: 17}}>Estudiar programación hoy</Text>
         </View>
         <View style={{ flex: 1 }} />
         <View style={{marginEnd: 20}}>
