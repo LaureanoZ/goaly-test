@@ -18,7 +18,7 @@ export default {
       },
       "supportsTablet": true,
       "bundleIdentifier": "com.goaly.goalyapp",
-      "googleServicesFile": process.env.GOOGLESERVICE_INFO_PLIST ?? "./GoogleService-Info.plist",
+      "googleServicesFile": process.env.GOOGLESERVICE_INFO_PLIST ?? "./ios/GoogleService-Info.plist",
     },
     "android": {
       "adaptiveIcon": {
@@ -31,7 +31,7 @@ export default {
         "backgroundColor": "#ffffff"
       },
       "package": "com.goaly.goalyapp",
-      "googleServicesFile": process.env.GOOGLE_SERVICES_JSON ?? "./google-services.json",
+      "googleServicesFile": process.env.GOOGLE_SERVICES_JSON ?? "./android/app/google-services.json",
     },
     "web": {
       "bundler": "metro",

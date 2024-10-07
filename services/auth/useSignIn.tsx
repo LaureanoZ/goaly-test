@@ -33,16 +33,17 @@ export const useSignIn = () => {
       const { user } = await auth().signInWithEmailAndPassword(email, password);
 
       // Verificar si el email ha sido verificado
-      if (user.emailVerified) {
-        Alert.alert('Inicio de sesión exitoso', 'Has iniciado sesión correctamente.');
-        // Aquí puedes redirigir al usuario a la pantalla principal
-      } else {
-        Alert.alert(
-          'Correo no verificado',
-          'Debes verificar tu correo electrónico antes de poder iniciar sesión. Revisa tu bandeja de entrada y haz clic en el enlace de verificación.'
-        );
-        await auth().signOut(); // Cerrar sesión hasta que el usuario verifique el correo
-      }
+      // if (user.emailVerified) {
+      //   Alert.alert('Inicio de sesión exitoso', 'Has iniciado sesión correctamente.');
+
+      // } else {
+      //   await user.sendEmailVerification();
+      //   Alert.alert(
+      //     'Correo no verificado',
+      //     'Debes verificar tu correo electrónico antes de poder iniciar sesión. Revisa tu bandeja de entrada y haz clic en el enlace de verificación.'
+      //   );
+      //   await auth().signOut();
+      // }
     } catch (e: any) {
       // Manejo de errores específicos
       if (e.code === 'auth/wrong-password') {

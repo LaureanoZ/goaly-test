@@ -1,40 +1,74 @@
-import { View, Text, StyleSheet, Button, useWindowDimensions } from 'react-native'
-import { ThemedText } from '@/components/ThemedText';
-import { Link, useNavigation } from 'expo-router';
-import { useEffect } from 'react';
+import { StyleSheet, FlatList, RefreshControl } from 'react-native';
+import { useNavigation, useFocusEffect } from 'expo-router';
+import React, { useEffect, useState, useCallback } from 'react';
 import CreateGoalButton from '@/components/CreateGoalButton';
 import { ThemedView } from '@/components/ThemedView';
-import ThemeIcon from '@/components/ThemeIcon';
+import GoalCard from '@/components/GoalCard';
+import { useUser } from '@/context/userContext'; // Hook para obtener el usuario autenticado
+import { useFetchGoals } from '@/hooks/useFetchGoals'; // Hook para obtener los goals
+import { ThemedText } from '@/components/ThemedText';
+import Loader from '@/components/Loader';
 
-const home = () => {
+const Home = () => {
   const navigation = useNavigation();
-  const { width, height } = useWindowDimensions();
+  const userId = useUser()?.uid; // Obtenemos el ID del usuario autenticado
+  const { goals, loading, error, refetch } = useFetchGoals(userId); // Usamos el hook para obtener los goals
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch(); // Llamamos al método refetch para obtener los nuevos datos
+    setRefreshing(false);
+  };
+
   useEffect(() => {
-    const openModal = () => { (navigation as any).navigate('createGoalModal') }
+    const openModal = () => { (navigation as any).navigate('createGoalModal') };
     navigation.setOptions({ headerRight: () => <CreateGoalButton onPress={openModal} />, });
   }, [navigation]);
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch(); // Refrescamos los datos cuando volvemos a la pantalla Home
+    }, [])
+  );
+  if (loading && !refreshing) {
+    return (
+      <Loader/>
+    );
+  }
+
+  if (error) {
+    return (
+      <ThemedView style={styles.container}>
+        <ThemedText>{error}</ThemedText>
+      </ThemedView>
+    );
+  }
+
   return (
     <ThemedView style={styles.container}>
-      <View style={{
-        width: width - 40,
-        ...styles.card
-      }}>
-        <View style={{marginStart: 20}}>
-          <ThemeIcon iconName='laptop-outline' iconColor='black' iconSize={30} />
-        </View>
-        <View style={{marginStart: 10}}>
-          <Text style={{fontSize: 17}}>Estudiar programación hoy</Text>
-        </View>
-        <View style={{ flex: 1 }} />
-        <View style={{marginEnd: 20}}>
-          <ThemeIcon iconName='ellipse-outline' iconColor='black' iconSize={30} />
-        </View>
-      </View>
+      <FlatList
+        data={goals}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <GoalCard
+            title={item.title}
+            icon={item.icon}
+            color={item.color}
+            isCompleted={item.isDone}
+          />
+        )}
+        contentContainerStyle={{ paddingBottom: 20 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        } // Aquí añadimos el "pull to refresh"
+      />
     </ThemedView>
-  )
-}
+  );
+};
 
-export default home;
+export default Home;
 
 const styles = StyleSheet.create({
   container: {
@@ -42,17 +76,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
   },
-  card: {
-    height: 80,
-    backgroundColor: '#ffe1ee',
-    borderRadius: 10,
-    marginTop: 20,
-    shadowColor: '#000000',
-    shadowOffset: { width: -2, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 20,
-    flexDirection: 'row',
-    alignItems: 'center'
-  }
-})
+});

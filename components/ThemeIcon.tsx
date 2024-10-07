@@ -3,11 +3,11 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 interface Props {
   iconName: keyof typeof Ionicons.glyphMap;
-  iconColor: string;
-  iconSize: number
+  iconColor?: string;
+  iconSize?: number
 }
 
-const ThemeIcon = ({iconName, iconColor, iconSize}: Props) => {
+const ThemeIcon = ({iconName= 'ellipse-outline', iconColor='black', iconSize=20}: Props) => {
   return (
     <View style={styles.container}>
       <Ionicons name={iconName} size={iconSize} color={iconColor} />
